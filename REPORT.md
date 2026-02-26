@@ -1,5 +1,5 @@
 # **ZERO TIER LAB REPORT**
-================================================================================================
+============================================================================================
 
 This report documents the process of creating a Virtual Local Area Network (VLAN) 
 using ZeroTier to connect multiple machines located across different physical hosts 
@@ -11,7 +11,7 @@ that creates encrypted, peer‑to‑peer virtual networks with minimal configura
 
 ------------------------------------------------------------------------------------------------
 ## **ENVIRONMENT OVERVIEV**
-**------------------------------------------------------------------------------------------------**
+------------------------------------------------------------------------------------------------
 ### PHYSICAL LAYOUT
 
 - Machine A: Physical host running Windows Server 2025
@@ -24,14 +24,14 @@ that creates encrypted, peer‑to‑peer virtual networks with minimal configura
 
 ------------------------------------------------------------------------------------------------  
 ### VIRTUAL MACHINES ORACLE VIRTUAL BOX
-**------------------------------------------------------------------------------------------------**
+------------------------------------------------------------------------------------------------
 - VM1 (OS: Windows 11 Enterprise) **x2**
 
 - VM2 (OS:Windows 2025 Server)
 
 ------------------------------------------------------------------------------------------------    
 ## ZEROTIER ONE NETWORK SETUP
-**------------------------------------------------------------------------------------------------**
+------------------------------------------------------------------------------------------------
 ### CREATING ZEROTIER ONE NETWORK
 
 A new virtual network was created using the ZeroTier web console:
@@ -49,7 +49,7 @@ A new virtual network was created using the ZeroTier web console:
 
 ------------------------------------------------------------------------------------------------
 ## **INSTALLATION AND CONFIGURATION**
-**------------------------------------------------------------------------------------------------**
+------------------------------------------------------------------------------------------------
 ### INSTALLING ZEROTIER
 
 ZeroTier was installed on:
@@ -129,7 +129,7 @@ Once the client was opened, the server successfully joined the network.
 
 ------------------------------------------------------------------------------------------------
 ## **VERIFICATION**
-**------------------------------------------------------------------------------------------------**
+------------------------------------------------------------------------------------------------
 ### CONNECTIVITY TESTS
 
 Each machine was assigned a ZeroTier virtual IP address. Connectivity was verified using:
