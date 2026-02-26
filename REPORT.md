@@ -1,4 +1,4 @@
-# **ZERO TIER LAB REPORT**
+# **ZEROTIER-ONE LAB REPORT**
 ============================================================================================
 
 This report documents the process of creating a Virtual Local Area Network (VLAN) 
