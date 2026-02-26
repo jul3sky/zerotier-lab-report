@@ -1,166 +1,170 @@
-# zerotier-lab-report
-This report documents the process of creating a Virtual Local Area Network (VLAN) using ZeroTier to connect multiple machines located across different physical hosts and network segments. The goal was to build a unified lab environment where a Windows Server 2025 and two virtual machines could communicate as if they were on the same Layer‑2 network.
-ZeroTier was selected because it provides a lightweight, software‑defined networking solution that creates encrypted, peer‑to‑peer virtual networks with minimal configuration.
+# **ZERO TIER LAB REPORT**
+================================================================================================
+
+This report documents the process of creating a Virtual Local Area Network (VLAN) 
+using ZeroTier to connect multiple machines located across different physical hosts 
+and network segments. The goal was to build a unified lab environment where a Windows Server 2025 
+and two virtual machines could communicate as if they were on the same Layer‑2 network.
+ZeroTier was selected because it provides a lightweight, software‑defined networking solution 
+that creates encrypted, peer‑to‑peer virtual networks with minimal configuration.
 
 
-Environment Overview
-Physical Layout
+------------------------------------------------------------------------------------------------
+## **ENVIRONMENT OVERVIEV**
+**------------------------------------------------------------------------------------------------**
+### PHYSICAL LAYOUT
 
-    Machine A: Physical host running Windows Server 2025
+- Machine A: Physical host running Windows Server 2025
 
-    Machine B: Physical host running multiple VMs
+- Machine B: Physical host running multiple VMs
 
-    Router: Segments the two physical hosts into different subnets
+- Router: Segments the two physical hosts into different subnets
 
-    Goal: Make all machines appear on the same LAN
+- Goal: Make all machines appear on the same LAN
 
-Virtual Machines
+------------------------------------------------------------------------------------------------  
+### VIRTUAL MACHINES ORACLE VIRTUAL BOX
+**------------------------------------------------------------------------------------------------**
+- VM1 (OS: Windows 11 Enterprise) **x2**
 
-    VM1 (OS: Windows 11 home) x2
+- VM2 (OS:Windows 2025 Server)
 
-    VM2 (OS:Windows 2025 Server)
-
-    
-ZeroTier Network Setup
-
-Creating the ZeroTier Network
+------------------------------------------------------------------------------------------------    
+## ZEROTIER ONE NETWORK SETUP
+**------------------------------------------------------------------------------------------------**
+### CREATING ZEROTIER ONE NETWORK
 
 A new virtual network was created using the ZeroTier web console:
 
-    Logged into https://my.zerotier.com
+- Logged into https://my.zerotier.com
 
-    Created a new private network
+- Created a new private network
 
-    Obtained the Network ID
+- Obtained the Network ID
 
-    Enabled automatic IP assignment (default 10.x.x.x range)
+- Enabled automatic IP assignment (default 10.x.x.x range)
 
-This network acts as the virtual VLAN for all lab machines.
-
-
+- This network acts as the virtual VLAN for all lab machines.
 
 
-Installation and Configuration
-Installing ZeroTier
+------------------------------------------------------------------------------------------------
+## **INSTALLATION AND CONFIGURATION**
+**------------------------------------------------------------------------------------------------**
+### INSTALLING ZEROTIER
 
 ZeroTier was installed on:
 
-    Windows Server 2025
+- Windows Server 2025
 
-    VM1
+- VM1
 
-    VM2
+- VM2
 
-The installation process was straightforward on the VMs, but the Windows Server required additional troubleshooting due to driver‑signing restrictions.
+The installation process was straightforward on the VMs, but the Windows Server required 
+additional troubleshooting due to driver‑signing restrictions.
 
-Joining the Network
+------------------------------------------------------------------------------------------------
+### JOINING THE NETWORK
 
 Each machine joined the ZeroTier network using:
-powershell
+**Powershell**
 
-zerotier-cli join <network-id>
+`zerotier-cli join <network-id>`
 
 On Windows Server, the ZeroTier client appeared in the system tray and allowed joining through the GUI.
 
 
-
-Troubleshooting on Windows Server 2025
+------------------------------------------------------------------------------------------------
+### TROUBLESHOOTING ON WINDOWS SERVER 2025
 During installation on Windows Server 2025, ZeroTier initially failed to launch. Investigation revealed:
 
-    The installation folder existed but lacked the TAP driver files.
+- The installation folder existed but lacked the TAP driver files.
 
-    No ZeroTier service was registered.
+- No ZeroTier service was registered.
 
-    No driver was installed.
+- No driver was installed.
 
 This indicated that Windows Server silently blocked the driver installation.
 
 
-Diagnostic Commands Used
+------------------------------------------------------------------------------------------------
+### DIAGNOSTIC COMMANDS USED
 
 A series of PowerShell commands were used to diagnose the issue:
-Service and driver checks
-powershell
 
-Get-Service -Name zerotierone
-pnputil /enum-drivers | findstr ZeroTier
+- Service and driver checks
 
-Testsigning mode
-powershell
+`Get-Service -Name zerotierone`
+`pnputil /enum-drivers | findstr ZeroTier`
 
-bcdedit /set testsigning on
-bcdedit
+- Testsigning mode
 
-Secure Boot status
-powershell
+`bcdedit /set testsigning on`
 
-Confirm-SecureBootUEFI
+- Secure Boot status
 
-Event logs
-powershell
+`Confirm-SecureBootUEFI`
 
-Get-WinEvent -LogName Setup -MaxEvents 50 | findstr /i "ZeroTier"
+- Event logs
 
-Firewall rules
-powershell
+`Get-WinEvent -LogName Setup -MaxEvents 50 | findstr /i "ZeroTier"`
 
-Get-NetFirewallRule | findstr ZeroTier
+- Firewall rules
 
+`Get-NetFirewallRule | findstr ZeroTier`
 
-
-
-Resolution
+------------------------------------------------------------------------------------------------
+### RESOLUTION
 
 The issue was resolved by:
 
-    Ensuring testsigning mode was enabled
+- Ensuring testsigning mode was enabled
 
-    Verifying Memory Integrity was disabled
+- Verifying Memory Integrity was disabled
 
-    Confirming the ZeroTier client was already running in the system tray
+- Confirming the ZeroTier client was already running in the system tray
 
 Once the client was opened, the server successfully joined the network.
 
 
-
-
-Verification
-
-Connectivity Tests
+------------------------------------------------------------------------------------------------
+## **VERIFICATION**
+**------------------------------------------------------------------------------------------------**
+### CONNECTIVITY TESTS
 
 Each machine was assigned a ZeroTier virtual IP address. Connectivity was verified using:
-powershell
 
-ping <zerotier-ip>
+**Powershell**
+`ping <zerotier-ip>`
 
 All machines were able to communicate across the virtual LAN.
 
 
-
-Network Visibility
+------------------------------------------------------------------------------------------------
+### NETWORK VISIBILITY
 
 The ZeroTier web console confirmed:
 
-    All devices were authorized
+- All devices were authorized
 
-    All devices were online
+- All devices were online
 
-    All devices had valid virtual IPs
-
-
+- All devices had valid virtual IPs
 
 
-Conclusion
+------------------------------------------------------------------------------------------------
+## **CONCLUSION**
+------------------------------------------------------------------------------------------------
+The VLAN was successfully formed using ZeroTier, enabling seamless communication 
+between physically separated machines. The project demonstrated:
 
-The VLAN was successfully formed using ZeroTier, enabling seamless communication between physically separated machines. The project demonstrated:
+- How ZeroTier simplifies cross‑network connectivity
 
-    How ZeroTier simplifies cross‑network connectivity
+- How to troubleshoot driver‑related issues on Windows Server 2025
 
-    How to troubleshoot driver‑related issues on Windows Server 2025
+- How to verify and validate a virtual network configuration
 
-    How to verify and validate a virtual network configuration
-
-This setup now serves as a flexible foundation for further lab development, testing, and experimentation.
+**This setup now serves as a flexible foundation for further lab development, testing, and experimentation.**
 
 
 
